@@ -1,0 +1,16 @@
+Input:
+
+first second third fourth
+third
+Output:
+
+3
+Example 2:
+
+Input:
+
+cat dog and mouse
+elephant
+Output:
+
+Not found
