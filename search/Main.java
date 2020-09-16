@@ -1,66 +1,76 @@
 package search;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
         //System.out.println("Hello World!");
         Scanner scanner = new Scanner(System.in);
-
+        String menu = "=== Menu ===\n" +
+                "1. Find a person\n" +
+                "2. Print all people\n" +
+                "0. Exit\n";
         System.out.println("Enter the number of people:");
         int numberOfLines = scanner.nextInt();
-        String[] lines = new String[numberOfLines];
+        Set<String> lines = new HashSet<>();
         scanner.nextLine();
         System.out.println("Enter all people:");
         for (int i = 0; i < numberOfLines; i++) {
-            lines[i]=(scanner.nextLine());
+            lines.add(scanner.nextLine());
         }
         System.out.println();
-        System.out.println("Enter the number of search queries:");
-        int numberOfSearches = scanner.nextInt();
-        scanner.nextLine();
-        for (int j = 1; j <= numberOfSearches; j++) {
-            System.out.println("\nEnter data to search people:");
-            String word = scanner.next();
-            find(word, lines);
+        boolean exit = false;
+        while (!exit) {
+            System.out.println(menu);
+            int menuOPtion = scanner.nextInt();
+            System.out.println();
+            if (menuOPtion < 0 || menuOPtion > 2) {
+                System.out.println("Incorrect option! Try again.\n");
+                continue;
+            }
+            scanner.nextLine();
+            switch (menuOPtion) {
+                case 1:
+                    System.out.println("Enter a name or email to search all suitable people.");
+                    String word = scanner.next();
+                    scanner.nextLine();
+                    find(word, lines);
+                    break;
+                case 2:
+                    printAllPeople(lines);
+                    break;
+                case 0:
+                    exit = true;
+                    System.out.println("Bye!");
+                    break;
+
+            }
         }
-
-//        String[] lineOfWords = scanner.nextLine().split("\\s");
-//        String wordToSearch = scanner.next();
-//        boolean wordFound = false;
-//        for(int i=0;i<lineOfWords.length;i++){
-//            if(lineOfWords[i].equals(wordToSearch)){
-//                wordFound=true;
-//                System.out.println(i+1);
-//            }
-//        }
-//        if(!wordFound){
-//            System.out.println("Not Found");
-
-
     }
-
-    public static void find(String word, String[] lines) {
+//print all people entered
+    public static void printAllPeople(Set<String> lines) {
+        lines.forEach(System.out::println);
+    }
+//print the lines with matching words
+    public static void find(String word, Set<String> lines) {
         int counter = 0;
-        ArrayList<String> foundLines= new ArrayList<>();
-        for(String line : lines){
-            String[] words=line.split("\\s");
-            int found = 0;
-            for(String w:words){
-                if(w.trim().toLowerCase().equals(word.toLowerCase())){
-                    found++;break;
-                }
-            }
-            if(found==1) {
-                foundLines.add(line);
-            }
-        }
+        ArrayList<String> foundLines = new ArrayList<>();
+        int found = 0;
 
-        if(foundLines.size()==0){
+        lines.forEach(line -> {
+            if (line.toLowerCase().contains(word.toLowerCase())) {
+                foundLines.add(line);
+                // found++;
+            }
+        });
+
+        if (foundLines.size() == 0) {
             System.out.println("unknown\nNo matching people found.");
-        }else{
-            System.out.println("Found people:");
+        } else {
+            // System.out.println("Found people:");
             foundLines.forEach(System.out::println);
         }
 
